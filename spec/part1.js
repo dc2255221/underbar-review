@@ -126,7 +126,7 @@
           iterations.push([letter, index]);
         });
 
-        expect(iterations).to.eql([0, 'a'], [1, 'b'], [2, 'c']);
+        expect(iterations).to.eql([['a', 0], ['b', 1], ['c', 2]]);
       });
 
       it('should iterate over arrays and provide access to the original collection', function() {
@@ -342,12 +342,7 @@
         expect(uniqueNumbers).to.not.equal(numbers);
       });
 
-      it('should maintain same array length', function() {
-        var numbers = [1, 1, 2, 3];
-        var shuffled = _.shuffle(numbers);
 
-        expect(shuffled.length).to.equal(numbers.length);
-      });
     });
 
     describe('map', function() {
