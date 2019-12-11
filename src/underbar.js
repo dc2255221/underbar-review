@@ -357,7 +357,7 @@
   /**
    * ADVANCED
    * =================
-   *
+   *s
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
    * but nothing beyond here is required.
    */
@@ -365,7 +365,13 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
-    
+    return _.map(collection, function(item) {
+      if (typeof functionOrKey === 'string') {
+        return item[functionOrKey].apply(item, args);
+      } else {
+        return functionOrKey.apply(item, args);
+      }
+    });
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -380,7 +386,21 @@
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  _.zip = function() {
+  _.zip = function(...arrays) {
+    var longest = Math.max(..._.map(arrays, function(array) {
+      return array.length;
+    }));
+    var results = [];
+
+    for (var i = 0; i < longest; i++) {
+      var innerArray = [];
+      for (var j = 0; j < arrays.length; j++) {
+        innerArray.push(arrays[j][i]);
+      }
+      results.push(innerArray);
+    }
+
+    return results;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
