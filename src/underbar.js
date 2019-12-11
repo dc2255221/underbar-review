@@ -255,8 +255,16 @@
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(obj, ...targets) {
+    _.each(targets, function(target) {
+      _.each(target, function(value, key) {
+        if (obj[key] === undefined) {
+          obj[key] = value;
+        }
+      });
+    });
 
+    return obj;
   };
 
 
@@ -300,6 +308,15 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var calls = {};
+
+    return function() {
+      if (calls[JSON.stringify(arguments)] === undefined) {
+        calls[JSON.stringify(arguments)] = func.apply(this, arguments);
+      }
+
+      return calls[JSON.stringify(arguments)];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -308,7 +325,10 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait, ...args) {
+    setTimeout(function() {
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -323,6 +343,14 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    array = [...array];
+
+    for (var i = array.length - 1; i >= 0; i--) {
+      var randomIndex = Math.floor(Math.random() * i);
+      [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    }
+
+    return array;
   };
 
 
@@ -337,6 +365,7 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    
   };
 
   // Sort the object's values by a criterion produced by an iterator.
