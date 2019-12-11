@@ -407,18 +407,66 @@
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  _.flatten = function(array) {
+    var results = [];
+    _.each(array, function(item) {
+      if (Array.isArray(item)) {
+        results = results.concat(_.flatten(item));
+      } else {
+        results.push(item);
+      }
+    });
+    return results;
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {
+  _.intersection = function(...arrays) {
+    var seen = {};
+
+    _.each(arrays, function(array) {
+      _.each(array, function(item) {
+        if (seen[JSON.stringify(item)]) {
+          seen[JSON.stringify(item)].count++;
+        } else {
+          seen[JSON.stringify(item)] = {
+            count: 1,
+            value: item
+          };
+        }
+      });
+    });
+
+    return _.reduce(seen, function(accumulator, item) {
+      if (item.count === arrays.length) {
+        return accumulator.concat([item.value]);
+      } else {
+        return accumulator;
+      }
+    }, []);
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) {
+  _.difference = function(target, ...arrays) {
+    var seen = {};
+    var result = [];
+    _.each(arrays, function(array) {
+      _.each(array, function(item) {
+        seen[JSON.stringify(item)] = item;
+      });
+    });
+
+    _.each(target, function(item) {
+      if (!seen[JSON.stringify(item)]) {
+        result.push(item);
+      }
+    });
+
+    return result;
   };
+
+
 
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.  See the Underbar readme for extra details
@@ -426,5 +474,12 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    // closure
+      // time variable
+      // calls variable
+      // set interval for 1 ms updates time
+
+    // return function that calls it
+    // depending on some ratio of calls to time
   };
 }());
