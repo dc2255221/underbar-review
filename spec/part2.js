@@ -197,7 +197,12 @@
       it('should override properties found on the destination', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        //throw new Error('This test is missing.');
+        var destination = { a: true };
+        var source = { a: false };
+        _.extend(destination, source);
+
+        expect(destination.a).to.be.false;
       });
 
       it('should not override properties not found in the source', function() {
